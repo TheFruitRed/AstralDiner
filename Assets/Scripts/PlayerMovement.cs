@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool isCollidingTable; 
     [SerializeField] private bool isCollidingOrderTable; 
 
+
+    [SerializeField] TMP_Text TEMP_Carrying_Food;
+
     void Start()
     {
         inputBitArray = 0;
@@ -29,6 +33,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isCarryingFood == true) {
+            TEMP_Carrying_Food.text = "Carrying Food";
+        } else {
+            TEMP_Carrying_Food.text = "Not Carrying Food";
+        }
+
         inputBitArray = getPlayerInput();
         movePlayer(inputBitArray);
         updateForwardVector(inputBitArray);
