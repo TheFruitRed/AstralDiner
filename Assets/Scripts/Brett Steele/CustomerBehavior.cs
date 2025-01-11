@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class CustomerBehavior : MonoBehaviour
 {
@@ -25,17 +26,24 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] uint interruptTimer;
     [SerializeField] int followDistance;
     [SerializeField] GameObject TEMP_Table;
+    [SerializeField] TMP_Text TEMP_Score;
+    [SerializeField] TMP_Text TEMP_Timer;
+    [SerializeField] uint TEMP_Score_Money;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         currentCustomerState = CustomerState.INIT;
         previousCustomerState = CustomerState.INIT;
+        TEMP_Score_Money = 0;
+        TEMP_Timer.text = "Time: N/A";
     }
 
     // Update is called once per frame
     void Update()
     {
+        TEMP_Score.text = "$" + Mathf.Ceil(TEMP_Score_Money);
+
         switch (currentCustomerState) {
             case CustomerState.INIT:
                 initState();
@@ -127,6 +135,7 @@ public class CustomerBehavior : MonoBehaviour
 
     void updateCustomerStateTimer() {
         stateTimer -= Time.deltaTime;
+        TEMP_Timer.text = "Time: " + Mathf.Ceil(stateTimer);
     }
 
     void initState() {
@@ -181,6 +190,7 @@ public class CustomerBehavior : MonoBehaviour
     }
 
     void leavingState() {
-        
+        TEMP_Score_Money += tipMoney;
+        Destroy(gameObject);
     }
 }
