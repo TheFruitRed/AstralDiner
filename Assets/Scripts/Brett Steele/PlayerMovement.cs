@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 
     byte inputBitArray;
     Vector2 playerVelocity;
+    [SerializeField] public Vector3 forwardVector;
     [SerializeField] GameObject player;
     [SerializeField] int moveSpeed;
 
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     {
         inputBitArray = 0;
         playerVelocity = new Vector2(0,0);
+        forwardVector = Vector3.zero;
         isCarryingFood = false;
     }
 
@@ -24,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     {
         inputBitArray = getPlayerInput();
         movePlayer(inputBitArray);
+        updateForwardVector(inputBitArray);
     }
 
     byte getPlayerInput() {
@@ -69,6 +72,30 @@ public class PlayerMovement : MonoBehaviour
 
         playerVelocity.Normalize();
         player.GetComponent<Rigidbody2D>().linearVelocity = playerVelocity * moveSpeed;
+    }
+
+    void updateForwardVector(byte inputVals) {
+
+        if ((inputBitArray & 15) == 0) {
+            return;
+        }
+
+        // W Pressed
+        if ((inputVals & 1) == 1) {
+            forwardVector = Vector3.up;
+        }
+        // A Pressed
+        if ((inputVals & 2) == 2) {
+            forwardVector = Vector3.left;
+        }
+        // S Pressed
+        if ((inputVals & 4) == 4) {
+            forwardVector = Vector3.down;
+        }
+        // D Pressed
+        if ((inputVals & 8) == 8) {
+            forwardVector = Vector3.right;
+        }
     }
 
     void OnTriggerStay2D(Collider2D collision)
