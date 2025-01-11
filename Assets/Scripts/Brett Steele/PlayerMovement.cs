@@ -10,13 +10,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] int moveSpeed;
 
+    [SerializeField] GameObject customer;
+    [SerializeField] private bool isCarryingFood; 
 
+    
+    [SerializeField] private bool isCollidingCustomer; 
+    [SerializeField] private bool isCollidingTable; 
+    [SerializeField] private bool isCollidingOrderTable; 
 
     void Start()
     {
         inputBitArray = 0;
         playerVelocity = new Vector2(0,0);
         forwardVector = Vector3.zero;
+        isCarryingFood = false;
     }
 
     // Update is called once per frame
@@ -25,6 +32,41 @@ public class PlayerMovement : MonoBehaviour
         inputBitArray = getPlayerInput();
         movePlayer(inputBitArray);
         updateForwardVector(inputBitArray);
+
+        if (Input.GetKeyDown("space"))
+        {
+            
+            if (isCollidingTable)
+            {
+                Debug.Log("On trigger stay -- SPACE -- TABLE");
+                if (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.ESCORTED
+                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_TO_PLACE_ORDER
+                    || (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD && isCarryingFood)
+                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.CHECK_PLEASE)
+                {
+                    isCarryingFood = false;
+                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
+                }
+            }
+
+            if (isCollidingOrderTable)
+            {
+                Debug.Log("On trigger stay -- SPACE -- ORDER TABLE");
+                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD)
+                {
+                    isCarryingFood = true;
+                }
+            }
+            
+            if (isCollidingCustomer)
+            {
+                Debug.Log("On trigger stay -- SPACE -- KRUSTOMER");
+                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.QUEUEING)
+                {
+                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
+                }                
+            }
+        }
     }
 
     byte getPlayerInput() {
@@ -93,6 +135,42 @@ public class PlayerMovement : MonoBehaviour
         // D Pressed
         if ((inputVals & 8) == 8) {
             forwardVector = Vector3.right;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.name.Equals("Krustomer"))
+        {
+            isCollidingCustomer = true;                
+        }
+        
+        if (collision.name.Equals("Table"))
+        {
+            isCollidingTable = true;                
+        }
+        
+        if (collision.name.Equals("OrderTable"))
+        {
+            isCollidingOrderTable = true;                
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.name.Equals("Krustomer"))
+        {
+            isCollidingCustomer = false;                
+        }
+        
+        if (collision.name.Equals("Table"))
+        {
+            isCollidingTable = false;                
+        }
+        
+        if (collision.name.Equals("OrderTable"))
+        {
+            isCollidingOrderTable = false;                
         }
     }
 }

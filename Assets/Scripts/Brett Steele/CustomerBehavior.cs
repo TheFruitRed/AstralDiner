@@ -3,7 +3,7 @@ using TMPro;
 
 public class CustomerBehavior : MonoBehaviour
 {
-    enum CustomerState {
+    public enum CustomerState {
         INIT,
         QUEUEING,
         ESCORTED,
@@ -19,7 +19,7 @@ public class CustomerBehavior : MonoBehaviour
     }
 
     [SerializeField] GameObject player;
-    [SerializeField] CustomerState currentCustomerState;
+    [SerializeField] public CustomerState currentCustomerState;
     [SerializeField] private CustomerState previousCustomerState;
     [SerializeField] uint tipMoney;
     [SerializeField] float stateTimer;
@@ -42,6 +42,11 @@ public class CustomerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown("return"))
+        {
+            resetCharacter();
+        }
+
         TEMP_Score.text = "$" + Mathf.Ceil(TEMP_Score_Money);
 
         switch (currentCustomerState) {
@@ -85,7 +90,7 @@ public class CustomerBehavior : MonoBehaviour
     }
 
     public void updateCustomerState() {
-
+        Debug.Log("Moving to next state");
         if (currentCustomerState == CustomerState.INTERRUPTION_ACTION || currentCustomerState == CustomerState.INTERRUPTION_QUESTION) {
             CustomerState temp = previousCustomerState;
             previousCustomerState = currentCustomerState;
@@ -126,6 +131,7 @@ public class CustomerBehavior : MonoBehaviour
                 currentCustomerState = CustomerState.LEAVING;
                 break;
             case CustomerState.LEAVING:
+                currentCustomerState = CustomerState.INIT;
                 break;
             default:
                 currentCustomerState = CustomerState.LEAVING;
@@ -191,6 +197,14 @@ public class CustomerBehavior : MonoBehaviour
 
     void leavingState() {
         TEMP_Score_Money += tipMoney;
-        Destroy(gameObject);
+        resetCharacter();
+    }
+
+    void resetCharacter() {
+        transform.position = new Vector3(-6.42f, 0.0f, 0.0f);
+        stateTimer = 0;
+        TEMP_Timer.text = "Time: " + Mathf.Ceil(stateTimer);
+        previousCustomerState = CustomerState.INIT;
+        currentCustomerState = CustomerState.INIT;
     }
 }
