@@ -25,9 +25,12 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] float stateTimer;
     [SerializeField] uint interruptTimer;
     [SerializeField] int followDistance;
+
+
     [SerializeField] GameObject TEMP_Table;
     [SerializeField] TMP_Text TEMP_Score;
     [SerializeField] TMP_Text TEMP_Timer;
+    [SerializeField] TMP_Text TEMP_Customer_State;
     [SerializeField] uint TEMP_Score_Money;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,6 +51,7 @@ public class CustomerBehavior : MonoBehaviour
         }
 
         TEMP_Score.text = "$" + Mathf.Ceil(TEMP_Score_Money);
+        TEMP_Customer_State.text = currentCustomerState.ToString();
 
         switch (currentCustomerState) {
             case CustomerState.INIT:
