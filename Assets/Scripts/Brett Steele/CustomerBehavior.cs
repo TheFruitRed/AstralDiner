@@ -90,7 +90,6 @@ public class CustomerBehavior : MonoBehaviour
     }
 
     public void updateCustomerState() {
-        Debug.Log("Moving to next state");
         if (currentCustomerState == CustomerState.INTERRUPTION_ACTION || currentCustomerState == CustomerState.INTERRUPTION_QUESTION) {
             CustomerState temp = previousCustomerState;
             previousCustomerState = currentCustomerState;
