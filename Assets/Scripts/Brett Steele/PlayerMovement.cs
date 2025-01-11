@@ -38,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
             
             if (isCollidingTable)
             {
-                Debug.Log("On trigger stay -- SPACE -- TABLE");
                 if (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.ESCORTED
                     || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_TO_PLACE_ORDER
                     || (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD && isCarryingFood)
@@ -51,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
 
             if (isCollidingOrderTable)
             {
-                Debug.Log("On trigger stay -- SPACE -- ORDER TABLE");
                 if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD)
                 {
                     isCarryingFood = true;
@@ -60,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
             
             if (isCollidingCustomer)
             {
-                Debug.Log("On trigger stay -- SPACE -- KRUSTOMER");
                 if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.QUEUEING)
                 {
                     customer.GetComponent<CustomerBehavior>().updateCustomerState();
