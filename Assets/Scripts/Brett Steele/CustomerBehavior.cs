@@ -26,10 +26,6 @@ public class CustomerBehavior : MonoBehaviour
     [SerializeField] int followDistance;
     [SerializeField] GameObject TEMP_Table;
 
-    [SerializeField] CircleCollider2D innerCircleCollider;
-    // [SerializeField] CircleCollider2D outerCircleCollider;
-    [SerializeField] private GameObject table;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -81,7 +77,7 @@ public class CustomerBehavior : MonoBehaviour
     }
 
     public void updateCustomerState() {
-
+        Debug.Log("Moving to next state");
         if (currentCustomerState == CustomerState.INTERRUPTION_ACTION || currentCustomerState == CustomerState.INTERRUPTION_QUESTION) {
             CustomerState temp = previousCustomerState;
             previousCustomerState = currentCustomerState;

@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] int moveSpeed;
 
     [SerializeField] GameObject customer;
-    private bool isCarryingFood; 
+    [SerializeField] private bool isCarryingFood; 
 
     void Start()
     {
@@ -100,18 +100,22 @@ public class PlayerMovement : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
+        Debug.Log("On trigger stay");
         if (Input.GetKeyDown("space"))
         {
-            GameObject collidedObj = collision.transform.parent.gameObject;
-            if (collidedObj.name.Equals("Krustomer"))
+            Debug.Log("On trigger stay -- SPACE");
+            // GameObject collidedObj = collision.transform.parent.gameObject;
+            if (collision.name.Equals("Krustomer"))
             {
+                Debug.Log("On trigger stay -- SPACE -- KRUSTOMER");
                 if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.QUEUEING)
                 {
                     customer.GetComponent<CustomerBehavior>().updateCustomerState();
                 }                
             }
-            else if (collidedObj.name.Equals("Table"))
+            else if (collision.name.Equals("Table"))
             {
+                Debug.Log("On trigger stay -- SPACE -- TABLE");
                 if (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.ESCORTED
                     || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_TO_PLACE_ORDER
                     || (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD && isCarryingFood)
@@ -121,12 +125,12 @@ public class PlayerMovement : MonoBehaviour
                     customer.GetComponent<CustomerBehavior>().updateCustomerState();
                 }
             }
-            else if (collidedObj.name.Equals("OrderTable"))
+            else if (collision.name.Equals("OrderTable"))
             {
-                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.PLACING_ORDER)
+                Debug.Log("On trigger stay -- SPACE -- ORDER TABLE");
+                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD)
                 {
                     isCarryingFood = true;
-                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
                 }
             }
         }
