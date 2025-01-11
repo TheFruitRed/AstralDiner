@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CustomerBehavior : MonoBehaviour
 {
-    enum CustomerState {
+    public enum CustomerState {
         INIT,
         QUEUEING,
         ESCORTED,
@@ -17,55 +17,59 @@ public class CustomerBehavior : MonoBehaviour
         INTERRUPTION_ACTION
     }
 
-    [SerializeField] CustomerState currentCustomerState;
+    [SerializeField] public CustomerState currentCustomerState;
     [SerializeField] private CustomerState previousCustomerState;
     [SerializeField] uint tipMoney;
     [SerializeField] uint stateTimer;
     [SerializeField] uint interruptTimer;
 
+    [SerializeField] CircleCollider2D innerCircleCollider;
+    // [SerializeField] CircleCollider2D outerCircleCollider;
+    [SerializeField] private GameObject table;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentCustomerState = INIT;
-        previousCustomerState = INIT;
+        currentCustomerState = CustomerState.INIT;
+        previousCustomerState = CustomerState.INIT;
     }
 
     // Update is called once per frame
     void Update()
     {
         switch (currentCustomerState) {
-            case INIT:
+            case CustomerState.INIT:
                 break;
-            case QUEUEING:
+            case CustomerState.QUEUEING:
                 break;
-            case ESCORTED:
+            case CustomerState.ESCORTED:
                 break;
-            case LOOK_AT_MENU:
+            case CustomerState.LOOK_AT_MENU:
                 break;
-            case WAITING_TO_PLACE_ORDER:
+            case CustomerState.WAITING_TO_PLACE_ORDER:
                 break;
-            case PLACING_ORDER:
+            case CustomerState.PLACING_ORDER:
                 break;
-            case WAITING_FOR_FOOD:
+            case CustomerState.WAITING_FOR_FOOD:
                 break;
-            case EATING:
+            case CustomerState.EATING:
                 break;
-            case CHECK_PLEASE:
+            case CustomerState.CHECK_PLEASE:
                 break;
-            case LEAVING:
+            case CustomerState.LEAVING:
                 break;
-            case INTERRUPTION_QUESTION:
+            case CustomerState.INTERRUPTION_QUESTION:
                 break;
-            case INTERRUPTION_ACTION:
+            case CustomerState.INTERRUPTION_ACTION:
                 break;
             default:
                 break;
         }
     }
 
-    void updateCustomerState() {
+    public void updateCustomerState() {
 
-        if (currentCustomerState == INTERRUPTION_ACTION || currentCustomerState == INTERRUPTION_QUESTION) {
+        if (currentCustomerState == CustomerState.INTERRUPTION_ACTION || currentCustomerState == CustomerState.INTERRUPTION_QUESTION) {
             CustomerState temp = previousCustomerState;
             previousCustomerState = currentCustomerState;
             currentCustomerState = temp;
@@ -75,37 +79,37 @@ public class CustomerBehavior : MonoBehaviour
         previousCustomerState = currentCustomerState;
 
         switch (currentCustomerState) {
-            case INIT:
-                currentCustomerState = QUEUEING;
+            case CustomerState.INIT:
+                currentCustomerState = CustomerState.QUEUEING;
                 break;
-            case QUEUEING:
-                currentCustomerState = ESCORTED;
+            case CustomerState.QUEUEING:
+                currentCustomerState = CustomerState.ESCORTED;
                 break;
-            case ESCORTED:
-                currentCustomerState = LOOK_AT_MENU;
+            case CustomerState.ESCORTED:
+                currentCustomerState = CustomerState.LOOK_AT_MENU;
                 break;
-            case LOOK_AT_MENU:
-                currentCustomerState = WAITING_TO_PLACE_ORDER;
+            case CustomerState.LOOK_AT_MENU:
+                currentCustomerState = CustomerState.WAITING_TO_PLACE_ORDER;
                 break;
-            case WAITING_TO_PLACE_ORDER:
-                currentCustomerState = PLACING_ORDER;
+            case CustomerState.WAITING_TO_PLACE_ORDER:
+                currentCustomerState = CustomerState.PLACING_ORDER;
                 break;
-            case PLACING_ORDER:
-                currentCustomerState = WAITING_FOR_FOOD;
+            case CustomerState.PLACING_ORDER:
+                currentCustomerState = CustomerState.WAITING_FOR_FOOD;
                 break;
-            case WAITING_FOR_FOOD:
-                currentCustomerState = EATING;
+            case CustomerState.WAITING_FOR_FOOD:
+                currentCustomerState = CustomerState.EATING;
                 break;
-            case EATING:
-                currentCustomerState = CHECK_PLEASE;
+            case CustomerState.EATING:
+                currentCustomerState = CustomerState.CHECK_PLEASE;
                 break;
-            case CHECK_PLEASE:
-                currentCustomerState = LEAVING;
+            case CustomerState.CHECK_PLEASE:
+                currentCustomerState = CustomerState.LEAVING;
                 break;
-            case LEAVING:
+            case CustomerState.LEAVING:
                 break;
             default:
-                currentCustomerState = LEAVING;
+                currentCustomerState = CustomerState.LEAVING;
                 break;
         }
     }
