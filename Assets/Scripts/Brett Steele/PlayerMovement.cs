@@ -13,6 +13,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject customer;
     [SerializeField] private bool isCarryingFood; 
 
+    
+    [SerializeField] private bool isCollidingCustomer; 
+    [SerializeField] private bool isCollidingTable; 
+    [SerializeField] private bool isCollidingOrderTable; 
+
     void Start()
     {
         inputBitArray = 0;
@@ -27,6 +32,41 @@ public class PlayerMovement : MonoBehaviour
         inputBitArray = getPlayerInput();
         movePlayer(inputBitArray);
         updateForwardVector(inputBitArray);
+
+        if (Input.GetKeyDown("space"))
+        {
+            
+            if (isCollidingTable)
+            {
+                Debug.Log("On trigger stay -- SPACE -- TABLE");
+                if (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.ESCORTED
+                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_TO_PLACE_ORDER
+                    || (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD && isCarryingFood)
+                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.CHECK_PLEASE)
+                {
+                    isCarryingFood = false;
+                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
+                }
+            }
+
+            if (isCollidingOrderTable)
+            {
+                Debug.Log("On trigger stay -- SPACE -- ORDER TABLE");
+                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD)
+                {
+                    isCarryingFood = true;
+                }
+            }
+            
+            if (isCollidingCustomer)
+            {
+                Debug.Log("On trigger stay -- SPACE -- KRUSTOMER");
+                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.QUEUEING)
+                {
+                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
+                }                
+            }
+        }
     }
 
     byte getPlayerInput() {
@@ -98,41 +138,39 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("On trigger stay");
-        if (Input.GetKeyDown("space"))
+        if (collision.name.Equals("Krustomer"))
         {
-            Debug.Log("On trigger stay -- SPACE");
-            // GameObject collidedObj = collision.transform.parent.gameObject;
-            if (collision.name.Equals("Krustomer"))
-            {
-                Debug.Log("On trigger stay -- SPACE -- KRUSTOMER");
-                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.QUEUEING)
-                {
-                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
-                }                
-            }
-            else if (collision.name.Equals("Table"))
-            {
-                Debug.Log("On trigger stay -- SPACE -- TABLE");
-                if (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.ESCORTED
-                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_TO_PLACE_ORDER
-                    || (customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD && isCarryingFood)
-                    || customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.CHECK_PLEASE)
-                {
-                    isCarryingFood = false;
-                    customer.GetComponent<CustomerBehavior>().updateCustomerState();
-                }
-            }
-            else if (collision.name.Equals("OrderTable"))
-            {
-                Debug.Log("On trigger stay -- SPACE -- ORDER TABLE");
-                if(customer.GetComponent<CustomerBehavior>().currentCustomerState == CustomerBehavior.CustomerState.WAITING_FOR_FOOD)
-                {
-                    isCarryingFood = true;
-                }
-            }
+            isCollidingCustomer = true;                
+        }
+        
+        if (collision.name.Equals("Table"))
+        {
+            isCollidingTable = true;                
+        }
+        
+        if (collision.name.Equals("OrderTable"))
+        {
+            isCollidingOrderTable = true;                
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.name.Equals("Krustomer"))
+        {
+            isCollidingCustomer = false;                
+        }
+        
+        if (collision.name.Equals("Table"))
+        {
+            isCollidingTable = false;                
+        }
+        
+        if (collision.name.Equals("OrderTable"))
+        {
+            isCollidingOrderTable = false;                
         }
     }
 }
